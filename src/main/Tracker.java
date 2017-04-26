@@ -18,7 +18,8 @@ public class Tracker extends JFrame {
 	private final JPanel labels;
 	
 	private List<TrackerItem> creatures;
-	
+
+	private int currentTurnIndex = 0;
 	
 	public static void main(String[] args) {
 		Tracker tracker = new Tracker();
@@ -64,13 +65,33 @@ public class Tracker extends JFrame {
 		initiative.setHorizontalAlignment(SwingConstants.CENTER);
 		labels.add(initiative);
 		
-		// Add key bindings.
-		background.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "newCreature");
-		background.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "newCreature");
+		// Add key bindings. For some reason, this only works if we first add a dummy keystroke to the input map of a randomly selected component. //TODO check whether necessary
+		labels.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0), "something");
+		InputMap inputMap = background.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		
+		// Key F1: add new creature to the tracker.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0), "newCreature");
 		background.getActionMap().put("newCreature", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				addNewCreature();
+			}
+		});
+		
+		// Key F2: move the turn to the next creature.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0), "nextTurn");
+		background.getActionMap().put("nextTurn", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Raise the turn index.
+				currentTurnIndex++;
+				// Reset it to 0 if it is outside the list.
+				if (currentTurnIndex >= creatures.size()) {
+					currentTurnIndex = 0;
+				}
+				// Redraw the window.
+				redraw();
+				background.grabFocus();
 			}
 		});
 	}
@@ -82,7 +103,16 @@ public class Tracker extends JFrame {
 	public void redraw() {
 		background.add(labels);
 		
-		for (TrackerItem creature : creatures) {
+		for (int creatureIndex = 0; creatureIndex < creatures.size(); creatureIndex++) {
+			TrackerItem creature = creatures.get(creatureIndex);
+			if (creatureIndex == currentTurnIndex) {
+				// The current creature is active. Mark this with a divergent background colour.
+				creature.setBackground(Color.LIGHT_GRAY);
+			} else {
+				// Reset the background colour.
+				creature.setBackground(null);
+			}
+			
 			background.add(creature);
 		}
 		
