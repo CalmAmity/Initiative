@@ -37,5 +37,6 @@ public class TrackerItem {
 	
 	public void grabFocus() {
 		name.grabFocus();
+		name.selectAll();
 	}
 }
