@@ -7,6 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Tracker extends JFrame {
@@ -74,7 +75,11 @@ public class Tracker extends JFrame {
 		background.getActionMap().put("newCreature", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				addNewCreature();
+				TrackerItem newCreature = new TrackerItem("Creature " + creatures.size(), 0, 0, 0);
+				// TODO: detect PC's
+				creatures.add(newCreature);
+				redraw();
+				newCreature.grabFocus();
 			}
 		});
 		
@@ -90,6 +95,21 @@ public class Tracker extends JFrame {
 					currentTurnIndex = 0;
 				}
 				// Redraw the window.
+				redraw();
+				background.grabFocus();
+			}
+		});
+		
+		// Key ENTER: reorder the creatures based on their initiative scores.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "reorder");
+		background.getActionMap().put("reorder", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// Remember whose turn it is.
+				TrackerItem currentCreature = creatures.get(currentTurnIndex);
+				Collections.sort(creatures);
+				// Reset the turn indicator.
+				currentTurnIndex = creatures.indexOf(currentCreature);
 				redraw();
 				background.grabFocus();
 			}
@@ -119,13 +139,5 @@ public class Tracker extends JFrame {
 		this.add(background);
 		this.pack();
 		this.setVisible(true);
-	}
-	
-	private void addNewCreature() {
-		TrackerItem newCreature = new TrackerItem(10 + ROW_HEIGHT + (creatures.size() * ROW_HEIGHT), "Creature " + creatures.size(), 0, 0, 0);
-		// TODO: detect PC's
-		creatures.add(newCreature);
-		redraw();
-		newCreature.grabFocus();
 	}
 }

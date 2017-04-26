@@ -4,13 +4,13 @@ import javax.swing.*;
 import java.awt.*;
 
 /** Represents a single creature in the initiative order. */
-public class TrackerItem extends JPanel {
+public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 	private final JTextField name;
 	private final JTextField armorClass;
 	private final JTextField spellSaveDc;
 	private final JTextField initiative;
 	
-	public TrackerItem(int height, String name, int armorClass, int spellSaveDc, int initiative) {
+	public TrackerItem(String name, int armorClass, int spellSaveDc, int initiative) {
 		this.name = new JTextField(name);
 		this.name.setPreferredSize(new Dimension(100, Tracker.LABEL_HEIGHT));
 		this.name.selectAll();
@@ -37,5 +37,10 @@ public class TrackerItem extends JPanel {
 	
 	public void grabFocus() {
 		name.grabFocus();
+	}
+	
+	@Override
+	public int compareTo(TrackerItem other) {
+		return Integer.parseInt(other.initiative.getText()) - Integer.parseInt(this.initiative.getText());
 	}
 }
