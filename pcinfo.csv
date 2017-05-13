@@ -1,0 +1,6 @@
+# Use this file to predefine information about player characters and any other recurring characters.
+# Line format: <key>;<character name>;<armor class>;<spell save DC>;<initiative>
+# Entering the key defined in the first field and then pressing tab will fill the visible fields with the remaining values. Use commas to separate multiple keys. Obviously, using
+# the same key for multiple characters will end in crushing disappointment and/or tears.
+p;Player character;18;15;0
+q,r;Other PC;12;21;3

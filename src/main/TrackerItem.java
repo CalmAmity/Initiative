@@ -35,6 +35,7 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 		this.setAlignmentX(Component.LEFT_ALIGNMENT);
 	}
 	
+	@Override
 	public void grabFocus() {
 		name.grabFocus();
 	}
@@ -42,5 +43,15 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 	@Override
 	public int compareTo(TrackerItem other) {
 		return Integer.parseInt(other.initiative.getText()) - Integer.parseInt(this.initiative.getText());
+	}
+	
+	@Override
+	public String toString() {
+		return getName();
+	}
+	
+	@Override
+	public String getName() {
+		return name.getText();
 	}
 }
