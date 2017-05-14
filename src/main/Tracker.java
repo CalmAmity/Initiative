@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -105,15 +106,16 @@ public class Tracker extends JFrame {
 		background.getActionMap().put("nextTurn", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// Raise the turn index.
-				currentTurnIndex++;
-				// Reset it to 0 if it is outside the list.
-				if (currentTurnIndex >= creatures.size()) {
-					currentTurnIndex = 0;
-				}
-				// Redraw the window.
-				redraw();
-				background.grabFocus();
+				shiftCurrentTurn(1);
+			}
+		});
+		
+		// Key combination Shift+F2: move the turn to the previous creature.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, InputEvent.SHIFT_MASK), "previousTurn");
+		background.getActionMap().put("previousTurn", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				shiftCurrentTurn(-1);
 			}
 		});
 		
@@ -235,6 +237,16 @@ public class Tracker extends JFrame {
 				playerCharacters.put(key, currentCharacter);
 			}
 		}
+	}
+	
+	/**
+	 * Moves the turn indicator to another item in the list.
+	 * @param turnShift the number of items to shift the turn downwards for. Use a negative value for upwards shift.
+	 */
+	private void shiftCurrentTurn(int turnShift) {
+		currentTurnIndex = (currentTurnIndex + turnShift + creatures.size()) % creatures.size();
+		redraw();
+		background.grabFocus();
 	}
 	
 	/** Removes the item that currently has focus from the tracker. */
