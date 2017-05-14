@@ -90,7 +90,7 @@ public class Tracker extends JFrame {
 		background.getActionMap().put("newCreature", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TrackerItem newCreature = new TrackerItem("Creature " + creatures.size(), 0, 0, 0);
+				TrackerItem newCreature = new TrackerItem(Tracker.this, "Creature " + creatures.size(), 0, 0, 0);
 				creatures.add(newCreature);
 				redraw();
 				newCreature.grabFocus();
@@ -146,7 +146,6 @@ public class Tracker extends JFrame {
 	
 	/**
 	 * Redraws the window.
-	 * TODO: should possibly override something?
 	 */
 	public void redraw() {
 		background.removeAll();
@@ -168,6 +167,8 @@ public class Tracker extends JFrame {
 		
 		this.add(background);
 		this.pack();
+		this.revalidate();
+		this.repaint();
 		this.setVisible(true);
 	}
 	
@@ -200,13 +201,23 @@ public class Tracker extends JFrame {
 			// Split the first value of the array by commas; the resulting array contains all desired keys for the current character.
 			String[] keys = StringUtils.split(characterValues[0], ",");
 			// Use the remaining values to create a tracker item for the character.
-			TrackerItem currentCharacter
-					= new TrackerItem(characterValues[1], Integer.parseInt(characterValues[2]), Integer.parseInt(characterValues[3]), Integer.parseInt(characterValues[4]));
+			TrackerItem currentCharacter = new TrackerItem(
+					this, characterValues[1], Integer.parseInt(characterValues[2]), Integer.parseInt(characterValues[3]), Integer.parseInt(characterValues[4]));
 			
 			// For every key in keys[], put the tracker item in the map using that key.
 			for (String key : keys) {
 				playerCharacters.put(key, currentCharacter);
 			}
 		}
+	}
+	
+	/**
+	 * Removes an item from the tracker.
+	 *
+	 * @param trackerItem The item to be removed.
+	 */
+	void deleteItem(TrackerItem trackerItem) {
+		creatures.remove(trackerItem);
+		redraw();
 	}
 }
