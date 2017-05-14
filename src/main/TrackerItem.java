@@ -55,6 +55,12 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 	}
 	
 	@Override
+	public boolean isFocusOwner() {
+		// A tracker item is defined as having focus if one of its components has the focus.
+		return super.isFocusOwner() || name.isFocusOwner() || armorClass.isFocusOwner() || spellSaveDc.isFocusOwner() || initiative.isFocusOwner();
+	}
+	
+	@Override
 	public int compareTo(TrackerItem other) {
 		return Integer.parseInt(other.initiative.getText()) - Integer.parseInt(this.initiative.getText());
 	}

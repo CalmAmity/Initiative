@@ -81,7 +81,14 @@ public class Tracker extends JFrame {
 		initiative.setHorizontalAlignment(SwingConstants.CENTER);
 		labels.add(initiative);
 		
-		// Add key bindings. For some reason, this only works if we first add a dummy keystroke to the input map of a randomly selected component. //TODO check whether necessary
+		createKeyBindings();
+	}
+	
+	/**
+	 * Creates key bindings for all interactions.
+	 */
+	private void createKeyBindings() {
+		// For some reason, this only works if we first add a dummy keystroke to the input map of a randomly selected component. //TODO check whether necessary
 		labels.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0), "something");
 		InputMap inputMap = background.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		
@@ -142,12 +149,30 @@ public class Tracker extends JFrame {
 				background.grabFocus();
 			}
 		});
+		
+		// Define the arrow-up key to move focus to the previous item in the tracker.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "focusUp");
+		background.getActionMap().put("focusUp", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				shiftFocus(-1);
+			}
+		});
+		
+		// Define the arrow-down key to move focus to the next item in the tracker.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "focusDown");
+		background.getActionMap().put("focusDown", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				shiftFocus(1);
+			}
+		});
 	}
 	
 	/**
 	 * Redraws the window.
 	 */
-	public void redraw() {
+	private void redraw() {
 		background.removeAll();
 		
 		background.add(labels);
@@ -213,11 +238,31 @@ public class Tracker extends JFrame {
 	
 	/**
 	 * Removes an item from the tracker.
-	 *
 	 * @param trackerItem The item to be removed.
 	 */
 	void deleteItem(TrackerItem trackerItem) {
 		creatures.remove(trackerItem);
+		redraw();
+	}
+	
+	/**
+	 * Moves the keyboard focus to another item in the list.
+	 *
+	 * @param focusShift the number of items to shift the focus downwards for. Use a negative value for upwards shift.
+	 */
+	private void shiftFocus(int focusShift) {
+		int currentFocus = 0;
+		// Determine which item currently has focus.
+		for (int itemIndex = 0; itemIndex < creatures.size(); itemIndex++) {
+			if (creatures.get(itemIndex).isFocusOwner()) {
+				currentFocus = itemIndex;
+				break;
+			}
+		}
+		
+		// Shift the focus by the indicated number of items. Wrap around the top and bottom of the list.
+		int newFocusIndex = (currentFocus + focusShift + creatures.size()) % creatures.size();
+		creatures.get(newFocusIndex).grabFocus();
 		redraw();
 	}
 }
