@@ -18,10 +18,13 @@
 	<tr><td>Arrow up</td><td>Move keyboard focus up one item.</td></tr>
 	<tr><td>Arrow down</td><td>Move keyboard focus down one item.</td></tr>
 	<tr><td>F4</td><td>Delete the item that currently has keyboard focus.</td></tr>
+	<tr><td>Esc</td><td>Remove keyboard focus from input field.</td></tr>
 </table>
 <p>They are currently not configurable, and neither are they displayed anywhere in the application's GUI. Both of those things may change in the future, but neither is a high priority for me.</p>
 <h1>AND THE RECURRING CHARACTER THING?</h1>
 <p>You can define those in the <a href="https://github.com/CalmAmity/Initiative/blob/master/pcinfo.csv">pcinfo.csv</a> file. That file contains an explanation of its syntax.</p>
+<h1>I CAN'T COMPILE THIS THING MYSELF BECAUSE I AM NOT LEGALLY ALLOWED TO USE JAVA COMPILERS / MY HANDS ARE TOO DELICATE / I AM TOO BUSY ACTUALLY PREPARING COOL RPG ENCOUNTERS</h1>
+<p>Huh. Well, there is a compiled package ready to go <a href="https://github.com/CalmAmity/Initiative/blob/master/compiled/Initiative.jar">here</a>. If you want to use pre-defined character functionality, be sure to also download the appropriate CSV file (see previous question), fill it correctly, and put it in the same directory as the JAR file.</p>
 <h1>WHY DOESN'T IT HAVE &lt;INSERT FEATURE&gt;?</h1>
 <p>One of three possible answers:</p>
 <ul>
