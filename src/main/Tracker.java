@@ -24,9 +24,7 @@ public class Tracker extends JFrame {
 	
 	private Map<String, TrackerItem> playerCharacters;
 	
-	/**
-	 * The panel that serves as a parent to all GUI components.
-	 */
+	/** The panel that serves as a parent to all GUI components. */
 	private final JPanel background;
 	/** The row with column headers. */
 	private final JPanel labels;
@@ -84,9 +82,7 @@ public class Tracker extends JFrame {
 		createKeyBindings();
 	}
 	
-	/**
-	 * Creates key bindings for all interactions.
-	 */
+	/** Creates key bindings for all interactions. */
 	private void createKeyBindings() {
 		// For some reason, this only works if we first add a dummy keystroke to the input map of a randomly selected component. //TODO check whether necessary
 		labels.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0), "something");
@@ -167,11 +163,18 @@ public class Tracker extends JFrame {
 				shiftFocus(1);
 			}
 		});
+		
+		// Define the F4 key to remove this item from the tracker.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "deleteCurrent");
+		background.getActionMap().put("deleteCurrent", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				deleteCurrentItem();
+			}
+		});
 	}
 	
-	/**
-	 * Redraws the window.
-	 */
+	/** Redraws the window. */
 	private void redraw() {
 		background.removeAll();
 		
@@ -197,9 +200,7 @@ public class Tracker extends JFrame {
 		this.setVisible(true);
 	}
 	
-	/**
-	 * Uses the pcinfo.csv file to initialise {@link #playerCharacters} map.
-	 */
+	/** Uses the pcinfo.csv file to initialise {@link #playerCharacters} map. */
 	private void parsePcInfo() {
 		List<String> lines;
 		try {
@@ -236,33 +237,39 @@ public class Tracker extends JFrame {
 		}
 	}
 	
-	/**
-	 * Removes an item from the tracker.
-	 * @param trackerItem The item to be removed.
-	 */
-	void deleteItem(TrackerItem trackerItem) {
-		creatures.remove(trackerItem);
+	/** Removes the item that currently has focus from the tracker. */
+	private void deleteCurrentItem() {
+		try {
+			creatures.remove(determineCurrentFocusIndex());
+		} catch (IndexOutOfBoundsException exception) {
+			// Apparently none of the tracker items has focus. Do nothing.
+			return;
+		}
 		redraw();
 	}
 	
 	/**
 	 * Moves the keyboard focus to another item in the list.
-	 *
 	 * @param focusShift the number of items to shift the focus downwards for. Use a negative value for upwards shift.
 	 */
 	private void shiftFocus(int focusShift) {
-		int currentFocus = 0;
-		// Determine which item currently has focus.
+		// Shift the focus by the indicated number of items. Wrap around the top and bottom of the list.
+		int newFocusIndex = (determineCurrentFocusIndex() + focusShift + creatures.size()) % creatures.size();
+		creatures.get(newFocusIndex).grabFocus();
+		redraw();
+	}
+	
+	/**
+	 * Determines the index of the tracker item that currently has keyboard focus.
+	 * @return the index of the currently focused item, or an index outside of the list if no tracker item has keyboard focus.
+	 */
+	private int determineCurrentFocusIndex() {
 		for (int itemIndex = 0; itemIndex < creatures.size(); itemIndex++) {
 			if (creatures.get(itemIndex).isFocusOwner()) {
-				currentFocus = itemIndex;
-				break;
+				return itemIndex;
 			}
 		}
 		
-		// Shift the focus by the indicated number of items. Wrap around the top and bottom of the list.
-		int newFocusIndex = (currentFocus + focusShift + creatures.size()) % creatures.size();
-		creatures.get(newFocusIndex).grabFocus();
-		redraw();
+		return creatures.size();
 	}
 }

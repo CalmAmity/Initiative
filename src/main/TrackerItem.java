@@ -2,8 +2,6 @@ package main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 /** Represents a single creature in the initiative order. */
 public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
@@ -38,15 +36,6 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 		
 		// Add some item-dependent key-bindings.
 		InputMap inputMap = this.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		
-		// Define the F4 key to remove this item from the tracker.
-		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "deleteCurrent");
-		this.getActionMap().put("deleteCurrent", new AbstractAction() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				tracker.deleteItem(TrackerItem.this);
-			}
-		});
 	}
 	
 	@Override
