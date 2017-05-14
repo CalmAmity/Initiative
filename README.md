@@ -20,8 +20,10 @@
 	<tr><td>F4</td><td>Delete the item that currently has keyboard focus.</td></tr>
 </table>
 <p>They are currently not configurable, and neither are they displayed anywhere in the application's GUI. Both of those things may change in the future, but neither is a high priority for me.</p>
+<h1>AND THE RECURRING CHARACTER THING?</h1>
+<p>You can define those in the <a href="https://github.com/CalmAmity/Initiative/blob/master/pcinfo.csv">pcinfo.csv</a> file. That file contains an explanation of its syntax.</p>
 <h1>WHY DOESN'T IT HAVE &lt;INSERT FEATURE&gt;?</h1>
-</p>One of three possible answers:<p>
+<p>One of three possible answers:</p>
 <ul>
 	<li>It wouldn't be that useful to me.</li>
 	<li>I haven't gotten around to it (do not assume that I ever will, you *will* be disappointed).</li>
