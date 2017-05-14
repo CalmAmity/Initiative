@@ -145,14 +145,17 @@ public class Tracker extends JFrame {
 				// Remember whose turn it is.
 				TrackerItem creatureAtTurn = creatures.get(currentTurnIndex);
 				
-				for (int creatureIndex = 0; creatureIndex < creatures.size(); creatureIndex++) {
-					TrackerItem currentCreature = creatures.get(creatureIndex);
-					TrackerItem playerCharacter = playerCharacters.get(currentCreature.getName());
-					if (playerCharacter != null) {
-						// Overwrite the current item with the pre-defined information of the player character.
-						creatures.set(creatureIndex, playerCharacter);
-						// If te pre-defined information contains no initiative score (value zero), retain the value that was already in the item being replaced.
-						playerCharacter.fillInitiativeScore(currentCreature.determineInitiativeScore());
+				if (playerCharacters != null && !playerCharacters.isEmpty()) {
+					// At least one pre-defined character exists. Check whether any of the items currently in the tracker use one of their keys.
+					for (int creatureIndex = 0; creatureIndex < creatures.size(); creatureIndex++) {
+						TrackerItem currentCreature = creatures.get(creatureIndex);
+						TrackerItem playerCharacter = playerCharacters.get(currentCreature.getName());
+						if (playerCharacter != null) {
+							// A pre-defined character exists with the current item's name as its key. Overwrite this item with the pre-defined character's information.
+							creatures.set(creatureIndex, playerCharacter);
+							// If te pre-defined information contains no initiative score (score equals zero), retain the value that was already in the item being replaced.
+							playerCharacter.fillInitiativeScore(currentCreature.determineInitiativeScore());
+						}
 					}
 				}
 				
