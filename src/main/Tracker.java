@@ -23,16 +23,26 @@ public class Tracker extends JFrame {
 	public static final int ROW_HEIGHT = 30;
 	public static final int LABEL_HEIGHT = ROW_HEIGHT - 10;
 	
+	/**
+	 * Contains all pre-defined characters.
+	 * @see #parsePcInfo()
+	 */
 	private Map<String, TrackerItem> playerCharacters;
 	
 	/** The panel that serves as a parent to all GUI components. */
 	private final JPanel background;
+	/** The window component in which the current turn number is displayed. */
+	private final JPanel roundTracker;
+	/** The label that shows the current turn number. */
+	private final JLabel roundTrackerLabel;
 	/** The row with column headers. */
-	private final JPanel labels;
-	
+	private final JPanel columnHeaders;
+	/** The creatures that are currently in the tracker. */
 	private List<TrackerItem> creatures;
-	
-	private int currentTurnIndex = 0;
+	/** The position in {@link #creatures} of the creature currently at turn. */
+	private int currentTurnIndex;
+	/** Indicates the current round; starts counting at 1. */
+	private int currentRound;
 	
 	public static void main(String[] args) {
 		Tracker tracker = new Tracker();
@@ -42,6 +52,7 @@ public class Tracker extends JFrame {
 	public Tracker() {
 		this.setTitle("Initiative");
 		creatures = new ArrayList<>();
+		currentRound = 1;
 		// Exit the JVM when the window is closed.
 		this.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
@@ -55,30 +66,37 @@ public class Tracker extends JFrame {
 		background.setVisible(true);
 		background.setLayout(new BoxLayout(background, BoxLayout.Y_AXIS));
 		
-		labels = new JPanel();
-		labels.setVisible(true);
-		labels.setAlignmentX(Component.LEFT_ALIGNMENT);
+		roundTracker = new JPanel();
+		roundTracker.setVisible(true);
+		roundTracker.setAlignmentX(Component.LEFT_ALIGNMENT);
 		
-		// Add column labels for the individual fields.
+		roundTrackerLabel = new JLabel();
+		roundTracker.add(roundTrackerLabel);
+		
+		columnHeaders = new JPanel();
+		columnHeaders.setVisible(true);
+		columnHeaders.setAlignmentX(Component.LEFT_ALIGNMENT);
+		
+		// Add column headers for the individual fields.
 		JLabel name = new JLabel("Name");
 		name.setPreferredSize(new Dimension(100, LABEL_HEIGHT));
 		name.setHorizontalAlignment(SwingConstants.LEADING);
-		labels.add(name);
+		columnHeaders.add(name);
 		
 		JLabel armorClass = new JLabel("AC");
 		armorClass.setPreferredSize(INTEGER_FIELD_DIMENSION);
 		armorClass.setHorizontalAlignment(SwingConstants.CENTER);
-		labels.add(armorClass);
+		columnHeaders.add(armorClass);
 		
 		JLabel spellSaveDc = new JLabel("SDC");
 		spellSaveDc.setPreferredSize(INTEGER_FIELD_DIMENSION);
 		spellSaveDc.setHorizontalAlignment(SwingConstants.CENTER);
-		labels.add(spellSaveDc);
+		columnHeaders.add(spellSaveDc);
 		
 		JLabel initiative = new JLabel("Init");
 		initiative.setPreferredSize(INTEGER_FIELD_DIMENSION);
 		initiative.setHorizontalAlignment(SwingConstants.CENTER);
-		labels.add(initiative);
+		columnHeaders.add(initiative);
 		
 		createKeyBindings();
 	}
@@ -86,7 +104,7 @@ public class Tracker extends JFrame {
 	/** Creates key bindings for all interactions. */
 	private void createKeyBindings() {
 		// For some reason, this only works if we first add a dummy keystroke to the input map of a randomly selected component. //TODO check whether necessary
-		labels.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0), "something");
+		columnHeaders.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0), "something");
 		InputMap inputMap = background.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
 		
 		// Key F1: add new creature to the tracker.
@@ -180,7 +198,10 @@ public class Tracker extends JFrame {
 	private void redraw() {
 		background.removeAll();
 		
-		background.add(labels);
+		roundTrackerLabel.setText("Current round: " + currentRound);
+		background.add(roundTracker);
+		
+		background.add(columnHeaders);
 		
 		for (int creatureIndex = 0; creatureIndex < creatures.size(); creatureIndex++) {
 			TrackerItem creature = creatures.get(creatureIndex);
@@ -244,7 +265,17 @@ public class Tracker extends JFrame {
 	 * @param turnShift the number of items to shift the turn downwards for. Use a negative value for upwards shift.
 	 */
 	private void shiftCurrentTurn(int turnShift) {
-		currentTurnIndex = (currentTurnIndex + turnShift + creatures.size()) % creatures.size();
+		currentTurnIndex += turnShift;
+		// Correct underflow.
+		while (currentTurnIndex < 0) {
+			currentTurnIndex += creatures.size();
+			currentRound--;
+		}
+		// Correct overflow.
+		while (currentTurnIndex >= creatures.size()) {
+			currentTurnIndex -= creatures.size();
+			currentRound++;
+		}
 		redraw();
 		background.grabFocus();
 	}
