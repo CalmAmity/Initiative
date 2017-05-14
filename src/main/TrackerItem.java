@@ -54,8 +54,8 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 	}
 	
 	@Override
-	public void grabFocus() {
-		name.grabFocus();
+	public boolean requestFocusInWindow() {
+		return name.requestFocusInWindow();
 	}
 	
 	@Override

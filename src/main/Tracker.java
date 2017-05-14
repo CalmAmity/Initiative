@@ -115,7 +115,7 @@ public class Tracker extends JFrame {
 				TrackerItem newCreature = new TrackerItem("Creature " + creatures.size(), 0, 0, 0);
 				creatures.add(newCreature);
 				redraw();
-				newCreature.grabFocus();
+				newCreature.requestFocusInWindow();
 			}
 		});
 		
@@ -165,11 +165,11 @@ public class Tracker extends JFrame {
 				}
 				
 				redraw();
-				background.grabFocus();
+				background.requestFocusInWindow();
 			}
 		});
 		
-		// Define the arrow-up key to move focus to the previous item in the tracker.
+		// Key arrow-up: move focus to the previous item in the tracker.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "focusUp");
 		background.getActionMap().put("focusUp", new AbstractAction() {
 			@Override
@@ -178,7 +178,7 @@ public class Tracker extends JFrame {
 			}
 		});
 		
-		// Define the arrow-down key to move focus to the next item in the tracker.
+		// Key arrow-down: move focus to the next item in the tracker.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "focusDown");
 		background.getActionMap().put("focusDown", new AbstractAction() {
 			@Override
@@ -187,12 +187,21 @@ public class Tracker extends JFrame {
 			}
 		});
 		
-		// Define the F4 key to remove this item from the tracker.
+		// Key F4: remove this item from the tracker.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0), "deleteCurrent");
 		background.getActionMap().put("deleteCurrent", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				deleteCurrentItem();
+			}
+		});
+		
+		// Key Esc: move keyboard focus out of the input fields.
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0), "removeFocus");
+		background.getActionMap().put("removeFocus", new AbstractAction() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				background.requestFocusInWindow();
 			}
 		});
 	}
@@ -280,7 +289,7 @@ public class Tracker extends JFrame {
 			currentRound++;
 		}
 		redraw();
-		background.grabFocus();
+		background.requestFocusInWindow();
 	}
 	
 	/** Removes the item that currently has focus from the tracker. */
@@ -299,15 +308,26 @@ public class Tracker extends JFrame {
 	 * @param focusShift the number of items to shift the focus downwards for. Use a negative value for upwards shift.
 	 */
 	private void shiftFocus(int focusShift) {
+		int currentFocusIndex;
+		try {
+			// Determine the index of the item that currently has focus.
+			currentFocusIndex = determineCurrentFocusIndex();
+		} catch (IndexOutOfBoundsException exception) {
+			// Apparently none of the tracker items has focus. Use a ridiculous calculation to set the current index between the first and last items in the list. This could
+			// obviously have been implemented using a simple if-statement, but this was much more fun.
+			currentFocusIndex = -(focusShift + Math.abs(focusShift)) / (2 * focusShift);
+		}
+		
 		// Shift the focus by the indicated number of items. Wrap around the top and bottom of the list.
-		int newFocusIndex = (determineCurrentFocusIndex() + focusShift + creatures.size()) % creatures.size();
-		creatures.get(newFocusIndex).grabFocus();
+		int newFocusIndex = (currentFocusIndex + focusShift + creatures.size()) % creatures.size();
+		creatures.get(newFocusIndex).requestFocusInWindow();
 		redraw();
 	}
 	
 	/**
 	 * Determines the index of the tracker item that currently has keyboard focus.
-	 * @return the index of the currently focused item, or an index outside of the list if no tracker item has keyboard focus.
+	 * @return the index of the currently focused item.
+	 * @throws IndexOutOfBoundsException if none of the items have keyboard focus.
 	 */
 	private int determineCurrentFocusIndex() {
 		for (int itemIndex = 0; itemIndex < creatures.size(); itemIndex++) {
@@ -316,6 +336,6 @@ public class Tracker extends JFrame {
 			}
 		}
 		
-		return creatures.size();
+		throw new IndexOutOfBoundsException();
 	}
 }
