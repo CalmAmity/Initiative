@@ -112,7 +112,7 @@ public class Tracker extends JFrame {
 		background.getActionMap().put("newCreature", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				TrackerItem newCreature = new TrackerItem(Tracker.this, "Creature " + creatures.size(), 0, 0, 0);
+				TrackerItem newCreature = new TrackerItem("Creature " + creatures.size(), 0, 0, 0);
 				creatures.add(newCreature);
 				redraw();
 				newCreature.grabFocus();
@@ -149,7 +149,10 @@ public class Tracker extends JFrame {
 					TrackerItem currentCreature = creatures.get(creatureIndex);
 					TrackerItem playerCharacter = playerCharacters.get(currentCreature.getName());
 					if (playerCharacter != null) {
+						// Overwrite the current item with the pre-defined information of the player character.
 						creatures.set(creatureIndex, playerCharacter);
+						// If te pre-defined information contains no initiative score (value zero), retain the value that was already in the item being replaced.
+						playerCharacter.fillInitiativeScore(currentCreature.determineInitiativeScore());
 					}
 				}
 				
@@ -251,7 +254,7 @@ public class Tracker extends JFrame {
 			String[] keys = StringUtils.split(characterValues[0], ",");
 			// Use the remaining values to create a tracker item for the character.
 			TrackerItem currentCharacter = new TrackerItem(
-					this, characterValues[1], Integer.parseInt(characterValues[2]), Integer.parseInt(characterValues[3]), Integer.parseInt(characterValues[4]));
+					characterValues[1], Integer.parseInt(characterValues[2]), Integer.parseInt(characterValues[3]), Integer.parseInt(characterValues[4]));
 			
 			// For every key in keys[], put the tracker item in the map using that key.
 			for (String key : keys) {

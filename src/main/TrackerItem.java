@@ -10,7 +10,7 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 	private final JTextField spellSaveDc;
 	private final JTextField initiative;
 	
-	public TrackerItem(Tracker tracker, String name, int armorClass, int spellSaveDc, int initiative) {
+	public TrackerItem(String name, int armorClass, int spellSaveDc, int initiative) {
 		this.name = new JTextField(name);
 		this.name.setPreferredSize(new Dimension(100, Tracker.LABEL_HEIGHT));
 		this.name.selectAll();
@@ -36,6 +36,21 @@ public class TrackerItem extends JPanel implements Comparable<TrackerItem> {
 		
 		// Add some item-dependent key-bindings.
 		InputMap inputMap = this.getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+	}
+	
+	/** @return the initiative score for this item. */
+	public int determineInitiativeScore() {
+		return Integer.parseInt(initiative.getText());
+	}
+	
+	/**
+	 * Sets the initiative score for this item <strong>only if the current score is zero</strong>.
+	 * @param initiativeScore The new initiative score for this item.
+	 */
+	public void fillInitiativeScore(int initiativeScore) {
+		if (Integer.parseInt(initiative.getText()) == 0) {
+			initiative.setText(String.valueOf(initiativeScore));
+		}
 	}
 	
 	@Override
