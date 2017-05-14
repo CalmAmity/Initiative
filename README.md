@@ -25,6 +25,7 @@
 <p>You can define those in the <a href="https://github.com/CalmAmity/Initiative/blob/master/pcinfo.csv">pcinfo.csv</a> file. That file contains an explanation of its syntax.</p>
 <h1>I CAN'T COMPILE THIS THING MYSELF BECAUSE I AM NOT LEGALLY ALLOWED TO USE JAVA COMPILERS / MY HANDS ARE TOO DELICATE / I AM TOO BUSY ACTUALLY PREPARING COOL RPG ENCOUNTERS</h1>
 <p>Huh. Well, there is a compiled package ready to go <a href="https://github.com/CalmAmity/Initiative/blob/master/compiled/Initiative.jar">here</a>. If you want to use pre-defined character functionality, be sure to also download the appropriate CSV file (see previous question), fill it correctly, and put it in the same directory as the JAR file.</p>
+<p>I'm not coming to your house to install Java though.</p>
 <h1>WHY DOESN'T IT HAVE &lt;INSERT FEATURE&gt;?</h1>
 <p>One of three possible answers:</p>
 <ul>
