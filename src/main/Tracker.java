@@ -172,8 +172,9 @@ public class Tracker extends JFrame {
 			}
 		});
 		
-		// Key arrow-up: move focus to the previous item in the tracker.
+		// Keys arrow-up and page-up: move focus to the previous item in the tracker.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "focusUp");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "focusUp");
 		background.getActionMap().put("focusUp", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -181,8 +182,9 @@ public class Tracker extends JFrame {
 			}
 		});
 		
-		// Key arrow-down: move focus to the next item in the tracker.
+		// Keys arrow-down and page-down: move focus to the next item in the tracker.
 		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "focusDown");
+		inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "focusDown");
 		background.getActionMap().put("focusDown", new AbstractAction() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
