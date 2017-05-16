@@ -15,8 +15,8 @@
 	<tr><td>F2</td><td>Next turn: move the turn indicator down one item.</td></tr>
 	<tr><td>Shift+F2</td><td>Previous turn: move the turn indicator up one item.</td></tr>
 	<tr><td>Enter</td><td>Rearrange: recognise and fill predefined entries, and order the entries based on the initiative values.</td></tr>
-	<tr><td>Arrow up</td><td>Move keyboard focus up one item.</td></tr>
-	<tr><td>Arrow down</td><td>Move keyboard focus down one item.</td></tr>
+	<tr><td>Arrow &#8593;<br/>Page&nbsp;up</td><td>Move keyboard focus up one item.</td></tr>
+	<tr><td>Arrow &#8595;<br/>Page&nbsp;down</td><td>Move keyboard focus down one item.</td></tr>
 	<tr><td>F4</td><td>Delete the item that currently has keyboard focus.</td></tr>
 	<tr><td>Esc</td><td>Remove keyboard focus from input field.</td></tr>
 </table>
